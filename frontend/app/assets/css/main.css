@@ -1,0 +1,25 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+html,
+body,
+#__nuxt,
+.layout {
+  @apply min-h-screen;
+}
+
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.4s;
+}
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+  filter: blur(1rem);
+}
+
+/* Transitions fluides pour tous les changements de couleur */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease,
+    color 0.3s ease, box-shadow 0.3s ease;
+}
