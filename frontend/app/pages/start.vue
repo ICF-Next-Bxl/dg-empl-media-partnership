@@ -11,23 +11,27 @@ const state = reactive<Partial<Schema>>({
 });
 
 async function onSubmit(/*event: FormSubmitEvent<Schema>*/) {
-  const q = store.questions.find((q) => q.order == 1);
+  const q = store.reset();
   if (q) {
     navigateTo(`/q/${q.slug}`);
   }
 }
 </script>
 <template>
-  <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-    <h2>Receive the results of this quiz in your email</h2>
-    <p>
-      Want to keep track of your progress and receive your results? Just drop
-      your email below – we’ll handle the rest!
-    </p>
-    <UFormField label="Email" name="email">
-      <UInput v-model="state.email" />
-    </UFormField>
+  <div
+    class="flex flex-col mx-auto max-w-5xl mt-12 rounded-2xl bg-secondary-800/70 p-4 border-2 border-secondary-400"
+  >
+    <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+      <h2>Receive the results of this quiz in your email</h2>
+      <p>
+        Want to keep track of your progress and receive your results? Just drop
+        your email below – we’ll handle the rest!
+      </p>
+      <UFormField label="Email" name="email">
+        <UInput v-model="state.email" variant="subtle" />
+      </UFormField>
 
-    <UButton type="submit"> start the quizz </UButton>
-  </UForm>
+      <UButton type="submit"> start the quizz </UButton>
+    </UForm>
+  </div>
 </template>

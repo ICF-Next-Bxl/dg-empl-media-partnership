@@ -12,3 +12,10 @@ export type Question = {
   text: string;
   answers: Array<Answer>;
 };
+
+export type Outcome = {
+  title: string;
+  text: string;
+  proof: string;
+  path: Array<number>;
+};

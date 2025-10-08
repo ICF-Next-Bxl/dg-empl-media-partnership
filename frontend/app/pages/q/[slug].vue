@@ -25,26 +25,30 @@ const state = reactive<Partial<Schema>>({
 });
 
 async function onSubmit(/*event: FormSubmitEvent<Schema>*/) {
-  const next = store.questions.find(
-    (q) => q.order > (question.value?.order ?? 0)
-  );
-  if (next) {
-    navigateTo(`/q/${next.slug}`);
-  } else {
-    navigateTo("/end");
+  if (state.answer) {
+    const next = store.addAnswer(state.answer);
+    if (next) {
+      navigateTo(`/q/${next.slug}`);
+    } else {
+      navigateTo("/outcome");
+    }
   }
 }
 </script>
 <template>
-  <UForm
-    v-if="question"
-    :schema="schema"
-    :state="state"
-    class="space-y-4"
-    @submit="onSubmit"
+  <div
+    class="flex flex-col mx-auto max-w-5xl mt-12 rounded-2xl bg-secondary-800/70 p-4 border-2 border-secondary-400"
   >
-    <p>{{ question?.text }}</p>
-    <URadioGroup v-model="state.answer" :items="items" />
-    <UButton type="submit"> Submit </UButton>
-  </UForm>
+    <UForm
+      v-if="question"
+      :schema="schema"
+      :state="state"
+      class="space-y-4"
+      @submit="onSubmit"
+    >
+      <p>{{ question?.text }}</p>
+      <URadioGroup v-model="state.answer" :items="items" />
+      <UButton type="submit"> Submit </UButton>
+    </UForm>
+  </div>
 </template>

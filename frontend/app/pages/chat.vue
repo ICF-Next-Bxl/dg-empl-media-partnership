@@ -1,14 +1,11 @@
 <script lang="ts" setup>
 import * as z from "zod";
-import type { Question } from "~/models/questions";
 import type { RadioGroupItem } from "@nuxt/ui";
 const store = useAppStore();
-const question = ref<Question | undefined>();
 const messages = ref<Array<{ text: string; answer?: string }>>([]);
 const leadCTA = ref<boolean>(false);
 const chatMessage = ref<string>("");
 const text = computed(() => chatMessage.value.split(" ").map((w) => w + " "));
-
 const items = ref<RadioGroupItem[]>();
 const schema = z.object({
   answer: z.int(),
@@ -21,8 +18,8 @@ const state = reactive<Partial<Schema>>({
 const showAnswers = (): Promise<void> => {
   return new Promise((resolve) => {
     nextTick(() => {
-      if (question.value) {
-        items.value = question.value?.answers;
+      if (store.question) {
+        items.value = store.question.answers;
         setTimeout(resolve, 200);
       } else {
         resolve();
@@ -32,9 +29,8 @@ const showAnswers = (): Promise<void> => {
 };
 
 onMounted(async () => {
-  const q = store.questions.find((item) => item.order == 1);
+  const q = store.reset();
   if (q) {
-    question.value = q;
     await addChatMessage(q.text);
     await showAnswers();
   }
@@ -62,10 +58,17 @@ const addHistoryMessage = async (message: {
 };
 
 const showOutcome = async () => {
-  const outcomes = [
-    "Thank you for completing the quiz! You will receive the results in your email",
-    "Now that you have explored a range of media partnership ideas tailored to your project, let’s take the next step—together. Our team of experts is here to help you shape a strategy that’s not only aligned with your goals and audiences, but also creative and impactful.",
-  ];
+  const outcomes = [];
+  if (store.outcome) {
+    outcomes.push(`${store.outcome.title}: ${store.outcome.text}`);
+    outcomes.push(`Proof point: ${store.outcome.proof}`);
+  }
+  outcomes.push(
+    "Thank you for completing the quiz! You will receive the results in your email"
+  );
+  outcomes.push(
+    "Now that you have explored a range of media partnership ideas tailored to your project, let’s take the next step—together. Our team of experts is here to help you shape a strategy that’s not only aligned with your goals and audiences, but also creative and impactful."
+  );
   for (const outcome of outcomes) {
     await addChatMessage(outcome);
     chatMessage.value = "";
@@ -75,34 +78,31 @@ const showOutcome = async () => {
 };
 
 async function onChange(/*event: FormSubmitEvent<Schema>*/) {
-  const next = store.questions.find(
-    (q) => q.order > (question.value?.order ?? 0)
-  );
-
-  const message: { text: string; answer: string } = {
-    text: question.value?.text ?? "",
-    answer:
-      question.value?.answers.find((a) => a.value == state.answer)?.label ?? "",
-  };
-
-  question.value = undefined;
-  chatMessage.value = "";
-  items.value = [];
-  state.answer = undefined;
-
-  await addHistoryMessage(message);
-
-  if (next) {
-    question.value = next;
-    await addChatMessage(question.value.text);
-    await showAnswers();
-  } else {
-    await showOutcome();
+  if (state.answer) {
+    if (store.question) {
+      const message: { text: string; answer: string } = {
+        text: store.question.text ?? "",
+        answer:
+          store.question.answers.find((a) => a.value == state.answer)?.label ??
+          "",
+      };
+      const next = store.addAnswer(state.answer);
+      chatMessage.value = "";
+      items.value = [];
+      state.answer = undefined;
+      await addHistoryMessage(message);
+      if (next) {
+        await addChatMessage(store.question.text);
+        await showAnswers();
+      } else {
+        await showOutcome();
+      }
+    }
   }
 }
 </script>
 <template>
-  <div id="chat" class="min-h-[50svh] mb-64 overflow-y-scroll px-8">
+  <div id="chat" class="mb-12 px-8 flex flex-col items-center mx-12">
     <div
       v-for="(message, index) in messages"
       :key="index"
@@ -123,7 +123,7 @@ async function onChange(/*event: FormSubmitEvent<Schema>*/) {
         >{{ word }}
       </span>
       <UForm
-        v-if="question"
+        v-if="store.question"
         :schema="schema"
         :state="state"
         class="space-y-4 mt-4"

@@ -6,7 +6,7 @@ const onTheme = (theme: "default" | "sand" | "artic") => {
 </script>
 <template>
   <div
-    class="layout layout--default bg-linear-80 from-secondary-500 to-secondary-900"
+    class="layout layout--default bg-linear-80 from-secondary-500 to-secondary-900 flex flex-col"
   >
     <header
       class="fixed top-0 w-full py-4 bg-secondary-500/50 backdrop-blur-sm z-50"
@@ -36,11 +36,13 @@ const onTheme = (theme: "default" | "sand" | "artic") => {
         >
       </div>
     </header>
-    <main class="page grid place-content-center min-h-screen">
+    <main class="page pt-24 grow">
       <slot />
     </main>
-    <footer class="fixed bottom-0 bg-secondary-800 p-8">
-      <h3>ICF Next: it's all about resonance</h3>
+    <footer class="bg-secondary-800 p-8">
+      <h3 class="text-xl md:text-4xl mb-4">
+        ICF Next: it's all about resonance
+      </h3>
       <p>
         At ICF Next, we place co-creation with media at the heart of our
         communication strategy. Just in the last four years, we have contacted

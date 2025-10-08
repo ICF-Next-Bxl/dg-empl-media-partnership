@@ -8,6 +8,10 @@ body,
   @apply min-h-screen;
 }
 
+p {
+  @apply mb-4;
+}
+
 .page-enter-active,
 .page-leave-active {
   transition: all 0.4s;
