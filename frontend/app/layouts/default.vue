@@ -1,61 +1,21 @@
 <script lang="ts" setup>
-const { setTheme, currentTheme } = useAppTheme();
-const onTheme = (theme: "default" | "sand" | "artic") => {
-  setTheme(theme);
-};
+const route = useRoute();
 </script>
 <template>
   <div
-    class="layout layout--default bg-linear-80 from-secondary-500 to-secondary-900 flex flex-col"
+    :class="[
+      'layout grid place-content-center',
+      `layout--${route.meta.theme ?? 'default'}`,
+    ]"
   >
-    <header
-      class="fixed top-0 w-full py-4 bg-secondary-500/50 backdrop-blur-sm z-50"
-    >
+    <main class="page max-w-5xl mt-[10sdv]">
       <div
-        class="flex flex-row space-x-4 items-center justify-end w-full max-w-5xl mx-auto"
+        v-if="route.meta.showAboutButton === true"
+        class="fixed top-6 right-6"
       >
-        <UButton to="/" icon="i-lucide-home">Home</UButton>
-        <!--<UButton to="/chat" icon="i-lucide-message-circle">Chat</UButton>-->
-        <UButton
-          icon="i-lucide-target"
-          :variant="currentTheme === 'default' ? 'solid' : 'soft'"
-          @click="onTheme('default')"
-          >Theme Default</UButton
-        >
-        <UButton
-          icon="i-lucide-sun"
-          :variant="currentTheme === 'sand' ? 'solid' : 'soft'"
-          @click="onTheme('sand')"
-          >Theme Sand</UButton
-        >
-        <UButton
-          icon="i-lucide-snowflake"
-          :variant="currentTheme === 'artic' ? 'solid' : 'soft'"
-          @click="onTheme('artic')"
-          >Theme Artic</UButton
-        >
+        <UButton color="neutral" variant="ghost" to="/about">About</UButton>
       </div>
-    </header>
-    <main class="page pt-24 grow">
       <slot />
     </main>
-    <footer class="bg-secondary-800 p-8">
-      <h3 class="text-xl md:text-4xl mb-4">
-        ICF Next: it's all about resonance
-      </h3>
-      <p>
-        At ICF Next, we place co-creation with media at the heart of our
-        communication strategy. Just in the last four years, we have contacted
-        over 130 media partners - in Europe and beyond - to work together on
-        solutions for our clients.
-      </p>
-      <p>
-        Our approach to media partnerships is diverse and tailored to specific
-        needs, from ad campaigns and branded content that subtly promotes the
-        campaign's messages, to full-blown collaborations that include creative
-        and storytelling services, distribution strategies and audience
-        engagement opportunities.
-      </p>
-    </footer>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import * as z from "zod";
-import type { FormSubmitEvent, RadioGroupItem } from "@nuxt/ui";
+import type { RadioGroupItem } from "@nuxt/ui";
 import type { Question } from "~/models/quizz";
 
 definePageMeta({
@@ -33,10 +33,17 @@ const state = reactive<Partial<Schema>>({
   choice: undefined,
 });
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
-  if (event.data.choice && question.value) {
+async function onChoiceChange() {
+  const validation = schema.safeParse(state);
+  if (validation.success) {
+    await submitAnswer(validation.data);
+  }
+}
+
+async function submitAnswer(formData: Schema) {
+  if (formData.choice && question.value) {
     const selectedChoice = question.value.choices.find(
-      (c) => c.value === event.data.choice
+      (c) => c.value === formData.choice
     );
     if (selectedChoice) {
       const nextQuestion = await store.addSubmissionAnswer(selectedChoice);
@@ -70,19 +77,23 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 }
 </script>
 <template>
-  <div
-    class="flex flex-col mx-auto max-w-5xl mt-12 rounded-2xl bg-secondary-800/70 p-4 border-2 border-secondary-400"
-  >
-    <UForm
-      v-if="question"
-      :schema="schema"
-      :state="state"
-      class="space-y-4"
-      @submit="onSubmit"
-    >
-      <p>{{ question?.text }}</p>
-      <URadioGroup v-model="state.choice" :items="items" />
-      <UButton type="submit"> Submit </UButton>
-    </UForm>
+  <div class="flex flex-col items-center justify-center">
+    <ActionSection>
+      <template #leading>
+        <h1 class="text-3xl">
+          {{ question?.text }}
+        </h1>
+      </template>
+      <template #default>
+        <UForm v-if="question" :schema="schema" :state="state">
+          <URadioGroup
+            v-model="state.choice"
+            :items="items"
+            class="flex-1"
+            @change="onChoiceChange"
+          />
+        </UForm>
+      </template>
+    </ActionSection>
   </div>
 </template>

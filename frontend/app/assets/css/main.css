@@ -12,6 +12,22 @@ p {
   @apply mb-4;
 }
 
+.layout {
+  background: radial-gradient(
+    ellipse 75% 100% at 50% -50%,
+    var(--ui-color-primary-600) 10%,
+    var(--ui-color-secondary-950) 85%
+  );
+}
+
+.layout.layout--splash {
+  background: radial-gradient(
+    ellipse 75% 100% at 50% -50%,
+    var(--ui-color-primary-300) 10%,
+    var(--ui-color-primary-600) 85%
+  );
+}
+
 .page-enter-active,
 .page-leave-active {
   transition: all 0.4s;
@@ -20,10 +36,4 @@ p {
 .page-leave-to {
   opacity: 0;
   filter: blur(1rem);
-}
-
-/* Transitions fluides pour tous les changements de couleur */
-* {
-  transition: background-color 0.3s ease, border-color 0.3s ease,
-    color 0.3s ease, box-shadow 0.3s ease;
 }

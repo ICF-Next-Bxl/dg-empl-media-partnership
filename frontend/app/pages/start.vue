@@ -12,6 +12,11 @@ const state = reactive<Partial<Schema>>({
   email: undefined,
 });
 
+const isFormValid = computed(() => {
+  const result = schema.safeParse(state);
+  return result.success;
+});
+
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   const q = await store.startSubmission(event.data.email);
   if (q) {
@@ -20,20 +25,37 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 }
 </script>
 <template>
-  <div
-    class="flex flex-col mx-auto max-w-5xl mt-12 rounded-2xl bg-secondary-800/70 p-4 border-2 border-secondary-400"
+  <UForm
+    :schema="schema"
+    :state="state"
+    class="flex flex-col items-center justify-center"
+    @submit="onSubmit"
   >
-    <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-      <h2>Receive the results of this quiz in your email</h2>
-      <p>
-        Want to keep track of your progress and receive your results? Just drop
-        your email below – we’ll handle the rest!
-      </p>
-      <UFormField label="Email" name="email">
-        <UInput v-model="state.email" variant="subtle" />
-      </UFormField>
-
-      <UButton type="submit"> start the quizz </UButton>
-    </UForm>
-  </div>
+    <ActionSection>
+      <template #leading>
+        <h1 class="text-4xl mb-4">
+          Receive the results of this quiz in your email
+        </h1>
+        <p>
+          Want to keep track of your progress and receive your results? Just
+          drop your email below – we’ll handle the rest!
+        </p>
+      </template>
+      <template #default>
+        <UInput
+          v-model="state.email"
+          color="neutral"
+          highlight
+          variant="ghost"
+          placeholder="your email"
+          class="min-w-64"
+        />
+      </template>
+    </ActionSection>
+    <div class="mt-48">
+      <UButton type="submit" :disabled="!isFormValid">
+        start the quizz
+      </UButton>
+    </div>
+  </UForm>
 </template>
