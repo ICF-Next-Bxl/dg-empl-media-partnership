@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "questions",
+  "info": {
+    "singularName": "question",
+    "pluralName": "questions",
+    "displayName": "Question"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "order": {
+      "type": "integer",
+      "default": 1,
+      "min": 0
+    },
+    "text": {
+      "type": "text"
+    },
+    "slug": {
+      "type": "uid"
+    },
+    "choices": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::choice.choice"
+    }
+  }
+}

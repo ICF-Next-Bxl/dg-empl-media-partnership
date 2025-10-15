@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "outcome_paths",
+  "info": {
+    "singularName": "outcome-path",
+    "pluralName": "outcome-paths",
+    "displayName": "OutcomePath"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "related_title": {
+      "type": "string",
+      "private": true
+    },
+    "question": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::question.question"
+    },
+    "value": {
+      "type": "integer"
+    }
+  }
+}

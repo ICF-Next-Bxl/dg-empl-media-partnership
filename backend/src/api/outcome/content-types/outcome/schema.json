@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "outcomes",
+  "info": {
+    "singularName": "outcome",
+    "pluralName": "outcomes",
+    "displayName": "Outcome"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "text": {
+      "type": "text"
+    },
+    "proof": {
+      "type": "text"
+    },
+    "outcome_paths": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::outcome-path.outcome-path"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "choices",
+  "info": {
+    "singularName": "choice",
+    "pluralName": "choices",
+    "displayName": "Choice"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "label": {
+      "type": "string"
+    },
+    "order": {
+      "type": "integer",
+      "default": 1,
+      "min": 0
+    },
+    "value": {
+      "type": "integer"
+    }
+  }
+}
