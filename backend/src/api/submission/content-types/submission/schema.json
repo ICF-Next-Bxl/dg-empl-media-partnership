@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "submissions",
+  "info": {
+    "singularName": "submission",
+    "pluralName": "submissions",
+    "displayName": "Submission"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "email": {
+      "type": "email"
+    },
+    "is_complete": {
+      "type": "boolean",
+      "default": false
+    },
+    "outcome": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::outcome.outcome"
+    },
+    "submission_answers": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::submission-answer.submission-answer",
+      "mappedBy": "submission"
+    }
+  }
+}

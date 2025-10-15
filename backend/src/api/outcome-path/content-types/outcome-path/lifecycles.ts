@@ -2,10 +2,10 @@
  * Strapi Lifecycle for the Outcome Path content type.
  *
  * This lifecycle automatically generates and updates the `related_title` field
- * for `outcome-path` entries based on their associated question and value.
+ * for `outcome-path` entries based on their associated question and choice.
  *
  * It ensures consistent naming of outcome paths in the form:
- *   `${question.slug} - [${value}]`
+ *   `${question.slug} - [${choice.label}]`
  *
  * The hook handles both `beforeCreate` and `beforeUpdate` events.
  *
@@ -30,15 +30,33 @@ const getQuestionSlug = async (id: number): Promise<string> => {
   return o?.slug ?? "";
 };
 
+/**
+ * Fetches the label of a Choice by its ID.
+ *
+ * @async
+ * @param {number} id - The ID of the choice to look up.
+ * @returns {Promise<string>} - The label of the choice, or an empty string if not found.
+ */
+const getChoiceLabel = async (id: number): Promise<string> => {
+  const o = await strapi.documents("api::choice.choice").findFirst({
+    filters: {
+      id: { $eq: id },
+    },
+  });
+
+  // Return the label or an empty string if choice is missing
+  return o?.label ?? "";
+};
+
 export default {
   /**
    * Lifecycle hook: Runs before an Outcome Path is created.
    *
    * Automatically populates the `related_title` field based on the connected
-   * question’s slug and the current path value.
+   * question’s slug and the choice's label.
    *
    * Format example:
-   *   "question-slug - [3]"
+   *   "question-slug - choice A"
    *
    * @async
    * @param {object} event - Strapi lifecycle event context.
@@ -61,15 +79,20 @@ export default {
         }
       }
 
-      // Always append the [value] part, even if slug is missing
-      data.related_title += `[${data.value ?? ""}]`;
+      const choiceId = data.choice?.connect?.[0]?.id ?? data.choice?.id;
+      if (choiceId) {
+        const label = await getChoiceLabel(choiceId);
+        if (label) {
+          data.related_title += label;
+        }
+      }
     }
   },
 
   /**
    * Lifecycle hook: Runs before an Outcome Path is updated.
    *
-   * Rebuilds the `related_title` to reflect any updated question relationships or value changes.
+   * Rebuilds the `related_title` to reflect any updated question or choice relationships changes.
    * This ensures data consistency between question slugs and related outcome paths.
    *
    * @async
@@ -86,15 +109,17 @@ export default {
     // Retrieve the existing document to access its related question
     const existing = await strapi.documents(event.model.uid).findOne({
       documentId: data.documentId,
-      populate: ["question"],
+      populate: ["question", "choice"],
     });
 
     // Reconstruct related_title with the associated question's slug
     if (existing.question) {
       data.related_title = `${existing.question.slug} - `;
     }
+    // Append the the choice label part
 
-    // Append the current [value] part
-    data.related_title += `[${data.value ?? ""}]`;
+    if (existing.choice) {
+      data.related_title += existing.choice.label;
+    }
   },
 };

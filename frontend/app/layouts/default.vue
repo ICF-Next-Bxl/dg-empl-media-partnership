@@ -15,7 +15,7 @@ const onTheme = (theme: "default" | "sand" | "artic") => {
         class="flex flex-row space-x-4 items-center justify-end w-full max-w-5xl mx-auto"
       >
         <UButton to="/" icon="i-lucide-home">Home</UButton>
-        <UButton to="/chat" icon="i-lucide-message-circle">Chat</UButton>
+        <!--<UButton to="/chat" icon="i-lucide-message-circle">Chat</UButton>-->
         <UButton
           icon="i-lucide-target"
           :variant="currentTheme === 'default' ? 'solid' : 'soft'"

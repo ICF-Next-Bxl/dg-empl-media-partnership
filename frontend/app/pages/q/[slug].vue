@@ -1,36 +1,70 @@
 <script lang="ts" setup>
 import * as z from "zod";
-import type { /*FormSubmitEvent,*/ RadioGroupItem } from "@nuxt/ui";
-import type { Question } from "~/models/questions";
+import type { FormSubmitEvent, RadioGroupItem } from "@nuxt/ui";
+import type { Question } from "~/models/quizz";
+
+definePageMeta({
+  middleware: "require-submission",
+});
 
 const route = useRoute();
 const question = ref<Question>();
 const items = ref<RadioGroupItem[]>();
 const store = useAppStore();
+const isCheckingOutcome = ref(false);
 
 watchEffect(() => {
   const q = store.questions.find((q) => q.slug == route.params.slug);
   if (q) {
     question.value = q;
-    items.value = q.answers;
+    items.value = q.choices;
   }
 });
 
+// TODO: hasPreviousQuestion
+// TODO: hasNextQuestion
+// TODO: current "step", total step (+1 for outcome)
+
 const schema = z.object({
-  answer: z.int(),
+  choice: z.int(),
 });
 type Schema = z.output<typeof schema>;
 const state = reactive<Partial<Schema>>({
-  answer: undefined,
+  choice: undefined,
 });
 
-async function onSubmit(/*event: FormSubmitEvent<Schema>*/) {
-  if (state.answer) {
-    const next = store.addAnswer(state.answer);
-    if (next) {
-      navigateTo(`/q/${next.slug}`);
-    } else {
-      navigateTo("/outcome");
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+  if (event.data.choice && question.value) {
+    const selectedChoice = question.value.choices.find(
+      (c) => c.value === event.data.choice
+    );
+    if (selectedChoice) {
+      const nextQuestion = await store.addSubmissionAnswer(selectedChoice);
+      if (nextQuestion) {
+        navigateTo(`/q/${nextQuestion.slug}`);
+      } else {
+        isCheckingOutcome.value = true;
+        let counter = 0;
+        const interval = setInterval(async () => {
+          counter++;
+          try {
+            await store.checkSubmissionIsComplete();
+            if (store.submission?.is_complete && store.submission?.outcome) {
+              clearInterval(interval);
+              navigateTo("/outcome");
+            } else if (counter >= 10) {
+              clearInterval(interval);
+              isCheckingOutcome.value = false;
+              createError({
+                statusCode: 500,
+                statusMessage: "Cannot determine outcome",
+              });
+            }
+          } catch {
+            clearInterval(interval);
+          }
+        }, 250);
+      }
     }
   }
 }
@@ -47,7 +81,7 @@ async function onSubmit(/*event: FormSubmitEvent<Schema>*/) {
       @submit="onSubmit"
     >
       <p>{{ question?.text }}</p>
-      <URadioGroup v-model="state.answer" :items="items" />
+      <URadioGroup v-model="state.choice" :items="items" />
       <UButton type="submit"> Submit </UButton>
     </UForm>
   </div>

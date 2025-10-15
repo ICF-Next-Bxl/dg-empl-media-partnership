@@ -1,17 +1,19 @@
 <script lang="ts" setup>
+import type { FormSubmitEvent } from "@nuxt/ui";
 import * as z from "zod";
-/*import type { FormSubmitEvent } from "@nuxt/ui";*/
 const store = useAppStore();
+
 const schema = z.object({
   email: z.email("Invalid email"),
 });
 type Schema = z.output<typeof schema>;
+
 const state = reactive<Partial<Schema>>({
   email: undefined,
 });
 
-async function onSubmit(/*event: FormSubmitEvent<Schema>*/) {
-  const q = store.reset();
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+  const q = await store.startSubmission(event.data.email);
   if (q) {
     navigateTo(`/q/${q.slug}`);
   }

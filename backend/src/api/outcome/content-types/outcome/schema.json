@@ -23,7 +23,8 @@
     "outcome_paths": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::outcome-path.outcome-path"
+      "target": "api::outcome-path.outcome-path",
+      "mappedBy": "outcome"
     }
   }
 }

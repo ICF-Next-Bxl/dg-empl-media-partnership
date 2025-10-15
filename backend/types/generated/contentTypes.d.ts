@@ -478,6 +478,7 @@ export interface ApiOutcomePathOutcomePath extends Struct.CollectionTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
+    choice: Schema.Attribute.Relation<'oneToOne', 'api::choice.choice'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -487,13 +488,13 @@ export interface ApiOutcomePathOutcomePath extends Struct.CollectionTypeSchema {
       'api::outcome-path.outcome-path'
     > &
       Schema.Attribute.Private;
+    outcome: Schema.Attribute.Relation<'manyToOne', 'api::outcome.outcome'>;
     publishedAt: Schema.Attribute.DateTime;
     question: Schema.Attribute.Relation<'oneToOne', 'api::question.question'>;
     related_title: Schema.Attribute.String & Schema.Attribute.Private;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    value: Schema.Attribute.Integer;
   };
 }
 
@@ -563,6 +564,75 @@ export interface ApiQuestionQuestion extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID;
     text: Schema.Attribute.Text;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiSubmissionAnswerSubmissionAnswer
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'submission_answers';
+  info: {
+    displayName: 'SubmissionAnswer';
+    pluralName: 'submission-answers';
+    singularName: 'submission-answer';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    choice: Schema.Attribute.Relation<'oneToOne', 'api::choice.choice'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::submission-answer.submission-answer'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    question: Schema.Attribute.Relation<'oneToOne', 'api::question.question'>;
+    related_title: Schema.Attribute.String & Schema.Attribute.Private;
+    submission: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::submission.submission'
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiSubmissionSubmission extends Struct.CollectionTypeSchema {
+  collectionName: 'submissions';
+  info: {
+    displayName: 'Submission';
+    pluralName: 'submissions';
+    singularName: 'submission';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    email: Schema.Attribute.Email;
+    is_complete: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::submission.submission'
+    > &
+      Schema.Attribute.Private;
+    outcome: Schema.Attribute.Relation<'oneToOne', 'api::outcome.outcome'>;
+    publishedAt: Schema.Attribute.DateTime;
+    submission_answers: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::submission-answer.submission-answer'
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1083,6 +1153,8 @@ declare module '@strapi/strapi' {
       'api::outcome-path.outcome-path': ApiOutcomePathOutcomePath;
       'api::outcome.outcome': ApiOutcomeOutcome;
       'api::question.question': ApiQuestionQuestion;
+      'api::submission-answer.submission-answer': ApiSubmissionAnswerSubmissionAnswer;
+      'api::submission.submission': ApiSubmissionSubmission;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

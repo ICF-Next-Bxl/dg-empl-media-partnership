@@ -11,6 +11,7 @@
 import type { Core } from "@strapi/strapi";
 import { questions, outcomes } from "../data/initial-data";
 import type { Question, Answer, Outcome } from "../data/initial-data";
+import choice from "./api/choice/controllers/choice";
 
 /**
  * Creates and returns a composable that handles importing initial data into Strapi.
@@ -19,6 +20,11 @@ import type { Question, Answer, Outcome } from "../data/initial-data";
  * @returns {{ importData: () => Promise<void> }} - An object exposing the importData method.
  */
 export const useImporter = (strapi: Core.Strapi) => {
+  const state = {
+    questions: {} as Record<number, any>,
+    choices: {} as Record<number, any>,
+  };
+
   /**
    * Checks if the database currently contains any questions.
    *
@@ -55,15 +61,16 @@ export const useImporter = (strapi: Core.Strapi) => {
    *
    * @async
    * @param {Question} question - The question data containing answers.
-   * @returns {Promise<Question>} - The created question record.
+   * @returns {Promise<void>} - Resolves when the question and its choices are created.
    */
-  const createQuestion = async (question: Question): Promise<Question> => {
+  const createQuestion = async (question: Question): Promise<void> => {
     const choices: number[] = [];
 
     // Create each choice and collect its ID
     for (const answer of question.answers) {
       const choice = await createChoice(answer);
       choices.push(choice.id);
+      state.choices[choice.id] = choice;
     }
 
     // Create the question and connect the choices
@@ -77,7 +84,7 @@ export const useImporter = (strapi: Core.Strapi) => {
         },
       },
     });
-    return _question;
+    state.questions[_question.id] = _question;
   };
 
   /**
@@ -92,15 +99,24 @@ export const useImporter = (strapi: Core.Strapi) => {
     value: number,
     questionIndex: number
   ): Promise<number> => {
-    const question = questions[questionIndex];
-
+    const _question = questions[questionIndex]; // question in the initial data;
+    let question = Object.values(state.questions).find(
+      (q) => q.slug === _question.slug
+    );
+    question = await strapi.documents("api::question.question").findFirst({
+      filters: {
+        id: { $eq: question.id },
+      },
+      populate: { choices: true },
+    });
+    const choice = question.choices.find((c) => c.value === value);
     const path = await strapi.db
       .query("api::outcome-path.outcome-path")
       .create({
         data: {
-          value: value,
+          choice: choice.id,
           question: question.id,
-          related_title: `${question.slug} - [${value}]`,
+          related_title: `${question.slug} - ${choice.label}`,
         },
       });
 
@@ -152,8 +168,7 @@ export const useImporter = (strapi: Core.Strapi) => {
     if (await isEmpty()) {
       // Step 1: Create questions and update their IDs in memory
       for (const question of questions) {
-        const _question = await createQuestion(question);
-        question.id = _question.id;
+        await createQuestion(question);
       }
 
       // Step 2: Create outcomes linked to those questions
