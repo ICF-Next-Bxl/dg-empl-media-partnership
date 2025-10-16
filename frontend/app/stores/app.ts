@@ -1,3 +1,13 @@
+/**
+ * App Store (Pinia) for managing the quiz application state.
+ *
+ * Responsibilities:
+ * - Load bulk quiz data
+ * - Track current submission, questions, and answers
+ * - Manage quiz flow (current question / slide)
+ * - Handle submission answers and check completion
+ */
+
 import type {
   Choice,
   Question,
@@ -6,6 +16,7 @@ import type {
 } from "~/models/quizz";
 
 export const useAppStore = defineStore("appStore", () => {
+  // Strapi API composable functions
   const {
     fetchBulkData,
     createSubmission,
@@ -14,23 +25,34 @@ export const useAppStore = defineStore("appStore", () => {
     checkSubmissionComplete,
   } = useStrapi();
 
-  const isLoading = ref(false);
-  const isLoaded = ref(false);
-  const questions = ref<Array<Question>>([]);
-  const answers = ref<Record<number, SubmissionAnswer>>({});
-  const question = ref<Question>();
-  const submission = ref<Submission | undefined>(undefined);
+  /** ================== STATE ================== */
+  const isLoading = ref(false); // True while bulk data is loading
+  const isLoaded = ref(false); // True after bulk data has been successfully loaded
+  const questions = ref<Array<Question>>([]); // All quiz questions
+  const answers = ref<Record<number, SubmissionAnswer>>({}); // Answers keyed by question ID
+  const question = ref<Question>(); // Current active question
+  const submission = ref<Submission | undefined>(undefined); // Current submission
 
-  const maxSlide = computed(() => questions.value.length); // number of question + 1
+  /** ================== COMPUTED ================== */
+  // Maximum slide (number of questions)
+  const maxSlide = computed(() => questions.value.length);
+
+  // Current slide index
   const currentSlide = ref<number>(0);
 
+  /** ================== ACTIONS ================== */
+
+  /**
+   * Load bulk quiz data from Strapi.
+   * Sorts questions by order and sets the first question as active.
+   */
   const loadBulkData = async () => {
     if (!isLoaded.value && !isLoading.value) {
       isLoading.value = true;
       const data = await fetchBulkData();
       if (data) {
         questions.value = data.questions.toSorted((a, b) => a.order - b.order);
-        question.value = questions.value.find((q) => q.order == 1);
+        question.value = questions.value.find((q) => q.order === 1);
         isLoaded.value = true;
       }
       isLoading.value = false;
@@ -38,6 +60,10 @@ export const useAppStore = defineStore("appStore", () => {
     return isLoaded.value;
   };
 
+  /**
+   * Start a new submission with the given email.
+   * Resets the quiz flow to the first question.
+   */
   const startSubmission = async (
     email: string
   ): Promise<Question | undefined> => {
@@ -45,6 +71,9 @@ export const useAppStore = defineStore("appStore", () => {
     return reset();
   };
 
+  /**
+   * Move to the next question in the quiz flow.
+   */
   const _nextQuestion = () => {
     if (question.value) {
       question.value = questions.value.find(
@@ -54,6 +83,11 @@ export const useAppStore = defineStore("appStore", () => {
     return question.value;
   };
 
+  /**
+   * Record an answer for the current question.
+   * Updates existing answer or creates a new one if needed.
+   * Returns the next question.
+   */
   const addSubmissionAnswer = async (
     choice: Choice
   ): Promise<Question | undefined> => {
@@ -64,9 +98,12 @@ export const useAppStore = defineStore("appStore", () => {
     ) {
       let submissionAnswer: SubmissionAnswer | undefined;
       const existingAnswer = answers.value[question.value.id];
+
       if (existingAnswer !== undefined) {
+        // Update existing answer
         submissionAnswer = await updateSubmissionAnswer(existingAnswer, choice);
       } else {
+        // Create new answer
         submissionAnswer = await createSubmissionAnswer(
           submission.value,
           question.value,
@@ -81,6 +118,9 @@ export const useAppStore = defineStore("appStore", () => {
     }
   };
 
+  /**
+   * Checks if the current submission is complete and updates the submission state.
+   */
   const checkSubmissionIsComplete = async (): Promise<boolean> => {
     if (submission.value) {
       const _submission = await checkSubmissionComplete(submission.value);
@@ -92,24 +132,31 @@ export const useAppStore = defineStore("appStore", () => {
     return false;
   };
 
+  /**
+   * Reset the quiz flow to the first question and clear answers.
+   */
   const reset = () => {
     currentSlide.value = 0;
-    const q = questions.value.find((q) => q.order == 1);
+    const q = questions.value.find((q) => q.order === 1);
     answers.value = {};
-    if (q) {
-      question.value = q;
-    }
+    if (q) question.value = q;
     return question.value;
   };
 
+  /** ================== RETURNED STORE ================== */
   return {
+    // State
     isLoaded,
     isLoading,
     questions,
     question,
     submission,
+
+    // Computed
     maxSlide,
     currentSlide,
+
+    // Actions
     loadBulkData,
     reset,
     startSubmission,
