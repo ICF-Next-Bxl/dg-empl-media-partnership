@@ -1,51 +1,79 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
 
+/** ================== ANIMATIONS =========================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInTop {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInBottom {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /** ================== UTILITIES =========================== */
+@utility animate-fade-in {
+  animation: fadeIn 0.8s ease-in-out forwards;
+}
 
-@layer utilities {
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
+@utility animate-slide-left {
+  animation: slideInLeft 0.6s ease-out forwards;
+}
 
-  @keyframes slideInLeft {
-    from {
-      opacity: 0;
-      transform: translateX(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
+@utility animate-slide-right {
+  animation: slideInRight 0.6s ease-out forwards;
+}
 
-  @keyframes slideInRight {
-    from {
-      opacity: 0;
-      transform: translateX(-30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
+@utility animate-slide-top {
+  animation: slideInTop 0.6s ease-out forwards;
+}
 
-  .animate-fade-in {
-    animation: fadeIn 0.8s ease-in-out forwards;
-  }
-
-  .animate-slide-left {
-    animation: slideInLeft 0.6s ease-out forwards;
-  }
-
-  .animate-slide-right {
-    animation: slideInRight 0.6s ease-out forwards;
-  }
+@utility animate-slide-bottom {
+  animation: slideInBottom 0.6s ease-out forwards;
 }
 
 /** ================== RESET/GLOBAL========================= */

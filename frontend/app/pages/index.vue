@@ -1,9 +1,15 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+definePageMeta({
+  theme: "default",
+});
+</script>
 <template>
   <div class="px-12">
     <ActionSection>
       <template #leading>
-        <h1 class="text-6xl mb-8">The media partnership guidebook</h1>
+        <h1 class="text-4xl md:text-6xl mb-8">
+          The media partnership guidebook
+        </h1>
       </template>
       <template #default>
         <p class="mb-6">

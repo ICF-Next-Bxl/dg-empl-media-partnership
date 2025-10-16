@@ -33,7 +33,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   >
     <ActionSection>
       <template #leading>
-        <h1 class="text-4xl mb-4">
+        <h1 class="text-3xl md:text-4xl mb-4">
           Receive the results of this quiz in your email
         </h1>
         <p>
@@ -48,7 +48,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           highlight
           variant="ghost"
           placeholder="your email"
-          class="min-w-64"
+          class="min-w-64 w-full md:max-w-64"
         />
       </template>
     </ActionSection>

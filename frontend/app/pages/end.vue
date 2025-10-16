@@ -1,13 +1,9 @@
-<script lang="ts" setup>
-definePageMeta({
-  theme: "splash",
-});
-</script>
+<script lang="ts" setup></script>
 <template>
   <div
-    class="p-12 flex flex-col items-center justify-center text-secondary-500 animate-[fade-in_3s_ease-in-out_500ms_forwards] opacity-0"
+    class="p-4 md:p-12 flex flex-col items-center justify-center text-secondary-500 opacity-0"
   >
-    <h1 class="text-7xl mb-8 max-w-3xl text-center">
+    <h1 class="text-3xl md:text-7xl mb-8 max-w-3xl text-center">
       Ready to bring your vision to life?
     </h1>
     <p class="mb-4 font-semibold max-w-lg text-sm">

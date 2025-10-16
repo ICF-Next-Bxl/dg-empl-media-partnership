@@ -80,7 +80,7 @@ async function submitAnswer(formData: Schema) {
   <div class="flex flex-col items-center justify-center">
     <ActionSection>
       <template #leading>
-        <h1 class="text-3xl">
+        <h1 class="text-2xl md:text-3xl pb-4 md:pb-0">
           {{ question?.text }}
         </h1>
       </template>

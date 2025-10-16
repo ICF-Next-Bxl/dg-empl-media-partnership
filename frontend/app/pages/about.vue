@@ -16,7 +16,9 @@ const router = useRouter();
       />
     </div>
     <h3 class="text-xl md:text-7xl mb-4">ICF Next:</h3>
-    <h4 class="text-5xl mb-6">it's all about resonance</h4>
+    <h4 class="text-center md:text-left text-5xl mb-6">
+      it's all about resonance
+    </h4>
     <p class="max-w-164 text-center">
       At ICF Next, we place co-creation with media at the heart of our
       communication strategy. Just in the last four years, we have contacted
