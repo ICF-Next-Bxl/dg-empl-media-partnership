@@ -1,4 +1,9 @@
 :root {
+  /**
+   * Primary color scale.
+   * Used for main branding elements, highlights, and buttons.
+   * Scale goes from lightest (--color-primary-50) to darkest (--color-primary-950).
+   */
   --color-primary-50: #ffffff;
   --color-primary-100: #eefef4;
   --color-primary-150: #ddfee8;
@@ -8,7 +13,7 @@
   --color-primary-350: #8ff8bb;
   --color-primary-400: #77f6b0;
   --color-primary-450: #5bf4a4;
-  --color-primary-500: #30f299;
+  --color-primary-500: #30f299; /* Main primary color */
   --color-primary-550: #30d487;
   --color-primary-600: #2fb775;
   --color-primary-650: #2d9a64;
@@ -19,6 +24,11 @@
   --color-primary-900: #111d16;
   --color-primary-950: #000000;
 
+  /**
+   * Secondary color scale.
+   * Used for text, backgrounds, and secondary UI elements.
+   * Scale goes from lightest (--color-secondary-50) to darkest (--color-secondary-950).
+   */
   --color-secondary-50: #ffffff;
   --color-secondary-100: #e1e2e8;
   --color-secondary-150: #c4c6d1;
@@ -28,7 +38,7 @@
   --color-secondary-350: #565e7b;
   --color-secondary-400: #3c4767;
   --color-secondary-450: #223153;
-  --color-secondary-500: #031c40;
+  --color-secondary-500: #031c40; /* Main secondary color */
   --color-secondary-550: #061a39;
   --color-secondary-600: #081733;
   --color-secondary-650: #0a152c;

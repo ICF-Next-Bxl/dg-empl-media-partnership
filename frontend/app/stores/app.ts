@@ -21,12 +21,15 @@ export const useAppStore = defineStore("appStore", () => {
   const question = ref<Question>();
   const submission = ref<Submission | undefined>(undefined);
 
+  const maxSlide = computed(() => questions.value.length); // number of question + 1
+  const currentSlide = ref<number>(0);
+
   const loadBulkData = async () => {
     if (!isLoaded.value && !isLoading.value) {
       isLoading.value = true;
       const data = await fetchBulkData();
       if (data) {
-        questions.value = data.questions.sort((a, b) => a.order - b.order);
+        questions.value = data.questions.toSorted((a, b) => a.order - b.order);
         question.value = questions.value.find((q) => q.order == 1);
         isLoaded.value = true;
       }
@@ -90,6 +93,7 @@ export const useAppStore = defineStore("appStore", () => {
   };
 
   const reset = () => {
+    currentSlide.value = 0;
     const q = questions.value.find((q) => q.order == 1);
     answers.value = {};
     if (q) {
@@ -104,6 +108,8 @@ export const useAppStore = defineStore("appStore", () => {
     questions,
     question,
     submission,
+    maxSlide,
+    currentSlide,
     loadBulkData,
     reset,
     startSubmission,

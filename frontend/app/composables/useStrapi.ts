@@ -1,3 +1,13 @@
+/**
+ * Composable for interacting with Strapi API endpoints related to the quiz.
+ *
+ * Provides functions to:
+ * - Fetch all bulk quiz data
+ * - Create a submission
+ * - Create and update submission answers
+ * - Check if a submission is complete
+ */
+
 import type { BulkData } from "~/models/api";
 import type {
   Choice,
@@ -8,6 +18,11 @@ import type {
 
 export const useStrapi = () => {
   const config = useRuntimeConfig();
+
+  /**
+   * Fetches all bulk quiz data from the Strapi API.
+   * This includes questions, choices, and outcomes.
+   */
   const fetchBulkData = async () => {
     const { data, error } = await useFetch<{ data: BulkData }>(
       "/api/bulk/all-data",
@@ -27,15 +42,17 @@ export const useStrapi = () => {
     return data.value?.data;
   };
 
+  /**
+   * Creates a new quiz submission for a given email.
+   * @param email - The email of the user submitting the quiz
+   */
   const createSubmission = async (email: string) => {
     try {
       const { data } = await $fetch<{ data: Submission }>("/api/submissions", {
         baseURL: config.public.strapiUrl,
         method: "POST",
         body: {
-          data: {
-            email,
-          },
+          data: { email },
         },
       });
       return data;
@@ -47,6 +64,9 @@ export const useStrapi = () => {
     }
   };
 
+  /**
+   * Creates a new submission answer linking a submission, question, and selected choice.
+   */
   const createSubmissionAnswer = async (
     submission: Submission,
     question: Question,
@@ -76,6 +96,9 @@ export const useStrapi = () => {
     }
   };
 
+  /**
+   * Updates an existing submission answer with a new choice.
+   */
   const updateSubmissionAnswer = async (
     submissionAnswer: SubmissionAnswer,
     choice: Choice
@@ -86,9 +109,7 @@ export const useStrapi = () => {
         baseURL: config.public.strapiUrl,
         method: "PUT",
         body: {
-          data: {
-            choice: choice.id,
-          },
+          data: { choice: choice.id },
         },
       }
     );
@@ -103,6 +124,9 @@ export const useStrapi = () => {
     return data.value?.data;
   };
 
+  /**
+   * Checks if a submission is complete and fetches the associated outcome if available.
+   */
   const checkSubmissionComplete = async (
     submission: Submission
   ): Promise<Submission | undefined> => {
@@ -112,9 +136,7 @@ export const useStrapi = () => {
         {
           baseURL: config.public.strapiUrl,
           method: "GET",
-          query: {
-            populate: "outcome",
-          },
+          query: { populate: "outcome" },
         }
       );
       return data;
