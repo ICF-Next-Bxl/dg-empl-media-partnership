@@ -16,9 +16,9 @@
     "seed": "node scripts/seed.js"
   },
   "dependencies": {
-    "@strapi/plugin-cloud": "5.27.0",
-    "@strapi/plugin-users-permissions": "5.27.0",
-    "@strapi/strapi": "5.27.0",
+    "@strapi/plugin-cloud": "^5.27.0",
+    "@strapi/plugin-users-permissions": "^5.27.0",
+    "@strapi/strapi": "^5.27.0",
     "better-sqlite3": "11.3.0",
     "mysql2": "^3.15.2",
     "react": "^18.0.0",
