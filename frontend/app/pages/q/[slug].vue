@@ -93,6 +93,7 @@ async function submitAnswer(formData: Schema) {
             :ui="{
               item: 'text-xl items-center space-x-4',
               fieldset: 'gap-y-4',
+              base: 'ring-white w-6 h-6',
             }"
             @change="onChoiceChange"
           />

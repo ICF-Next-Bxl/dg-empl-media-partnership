@@ -1,7 +1,7 @@
 <script lang="ts" setup></script>
 <template>
   <div
-    class="p-4 md:p-12 flex flex-col items-center justify-center text-secondary-500 opacity-0"
+    class="page--end p-4 md:p-12 flex flex-col items-center justify-center text-secondary-500 opacity-0 animate-fade-in delay-[2s] duration-1000"
   >
     <h1 class="text-3xl md:text-7xl mb-8 max-w-3xl text-center">
       Ready to bring your vision to life?

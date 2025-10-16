@@ -7,7 +7,7 @@
     </section>
     <div class="border-white border-b md:border-l md:w-0.5 self-stretch" />
     <section
-      class="flex-1 pt-6 animate-slide-bottom md:pl-6 md:pt-0 md:animate-slide-right delay-300"
+      class="flex-1 pt-6 animate-slide-bottom md:pl-6 md:pt-0 md:animate-slide-right delay-500"
     >
       <slot name="default" />
     </section>
