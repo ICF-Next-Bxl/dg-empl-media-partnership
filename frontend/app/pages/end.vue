@@ -26,7 +26,7 @@ definePageMeta({
       truly makes a difference.
     </p>
     <div class="flex flex-row justify-center mt-8">
-      <UButton color="neutral">Book a call now.</UButton>
+      <UButton color="neutral" to="/">Book a call now.</UButton>
     </div>
   </div>
 </template>
