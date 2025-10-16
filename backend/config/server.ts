@@ -5,6 +5,7 @@ export default ({ env }) => ({
     keys: env.array("APP_KEYS"),
   },
   proxy: {
+    // https://github.com/strapi/strapi/issues/24452
     enabled: env.bool("APP_PROXY", false),
     koa: {
       proxy: true,
