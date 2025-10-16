@@ -90,6 +90,10 @@ async function submitAnswer(formData: Schema) {
             v-model="state.choice"
             :items="items"
             class="flex-1"
+            :ui="{
+              item: 'text-xl items-center space-x-4',
+              fieldset: 'gap-y-4',
+            }"
             @change="onChoiceChange"
           />
         </UForm>

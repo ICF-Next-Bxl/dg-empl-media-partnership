@@ -1,14 +1,13 @@
 <script lang="ts" setup>
 definePageMeta({
-  showAboutButton: true,
   theme: "splash",
 });
 </script>
 <template>
   <div
-    class="p-12 flex flex-col items-center justify-center text-secondary-950"
+    class="p-12 flex flex-col items-center justify-center text-secondary-500 animate-[fade-in_3s_ease-in-out_500ms_forwards] opacity-0"
   >
-    <h1 class="text-7xl mb-8 max-w-3xl text-center te">
+    <h1 class="text-7xl mb-8 max-w-3xl text-center">
       Ready to bring your vision to life?
     </h1>
     <p class="mb-4 font-semibold max-w-lg text-sm">

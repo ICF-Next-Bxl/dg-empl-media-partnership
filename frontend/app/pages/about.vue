@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+definePageMeta({
+  hideAbout: true,
+});
+
 const router = useRouter();
 </script>
 <template>

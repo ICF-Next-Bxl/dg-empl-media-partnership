@@ -52,7 +52,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         />
       </template>
     </ActionSection>
-    <div class="mt-48">
+    <div class="mt-[10dvh]">
       <UButton type="submit" :disabled="!isFormValid">
         start the quizz
       </UButton>

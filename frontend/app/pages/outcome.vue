@@ -1,7 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
   middleware: "require-outcome",
-  showAboutButton: true,
 });
 const store = useAppStore();
 </script>
@@ -13,7 +12,7 @@ const store = useAppStore();
     <ActionSection>
       <template #leading>
         <p class="text-5xl">Your result</p>
-        <h1 class="text-7xl mb-4">{{ store.submission.outcome.title }}</h1>
+        <h1 class="text-6xl mb-4">{{ store.submission.outcome.title }}</h1>
       </template>
       <template #default>
         <p class="text-lg font-semibold">{{ store.submission.outcome.text }}</p>
@@ -21,7 +20,7 @@ const store = useAppStore();
         <p>{{ store.submission.outcome.proof }}</p>
       </template>
     </ActionSection>
-    <div class="mt-48">
+    <div class="mt-[10dvh]">
       <UButton to="/end">Next</UButton>
     </div>
   </div>

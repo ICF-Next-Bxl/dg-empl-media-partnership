@@ -1,10 +1,6 @@
-<script lang="ts" setup>
-definePageMeta({
-  showAboutButton: true,
-});
-</script>
+<script lang="ts" setup></script>
 <template>
-  <div class="p-12">
+  <div class="px-12">
     <ActionSection>
       <template #leading>
         <h1 class="text-6xl mb-8">The media partnership guidebook</h1>
@@ -24,7 +20,7 @@ definePageMeta({
         <p>We recommend that you start this quiz with a project in mind.</p>
       </template>
     </ActionSection>
-    <div class="flex flex-row justify-center mt-48 space-x-8">
+    <div class="flex flex-row justify-center mt-[10dvh] space-x-8">
       <UButton to="/start">Let's start</UButton>
     </div>
   </div>
